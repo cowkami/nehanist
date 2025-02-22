@@ -1,7 +1,6 @@
 import { createTheme } from '@mui/material/styles';
-import { grey } from '@mui/material/colors'; // Material UI が 提供 する グレー палитра を インポート
+import { cyan, blueGrey } from '@mui/material/colors';
 
-// ライトテーマ
 const lightTheme = createTheme({
   palette: {
     primary: {
@@ -21,32 +20,31 @@ const lightTheme = createTheme({
       primary: '#333333',
       secondary: '#757575',
     },
-    mode: 'light', // ライトモード を 指定
+    mode: 'light',
   },
 });
 
-// ダークテーマ
 const darkTheme = createTheme({
   palette: {
     primary: {
-      main: '#90caf9', // светло оттенki の 青色
+      main: cyan[800],
     },
     secondary: {
-      main: '#a5d6a7', // светло оттенki の 緑色
+      main: '#a5d6a7',
     },
     warning: {
-      main: '#ffd740', // светло оттенki の 黄色
+      main: '#ffd740',
     },
     background: {
-      default: '#121212', // очень 濃い灰色
-      paper: grey[900],   // ダークモード の 紙 компонент 背景色 は Material UI が 提供 する グレー палитра から 選択
+      default: blueGrey[900],
+      paper: blueGrey[700], 
     },
     text: {
-      primary: '#fff',    // 白色
-      secondary: '#cccccc', // светло оттенki の 灰色
+      primary: '#fff',
+      secondary: '#cccccc',
     },
-    mode: 'dark',  // ダークモード を 指定
+    mode: 'dark',
   },
 });
 
-export { lightTheme, darkTheme }; // ライトテーマ と ダークテーマ を エクスポート
+export { lightTheme, darkTheme };
