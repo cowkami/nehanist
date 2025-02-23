@@ -1,7 +1,31 @@
 use anyhow::Result;
-use axum::{Router, routing::get};
 use dotenv::dotenv;
-use tokio::net::TcpListener;
+use tonic::{Request, Response, Status, transport::Server};
+use tonic_web::GrpcWebLayer;
+
+// import the generated rust code from the proto file
+pub mod proto {
+    tonic::include_proto!("app");
+}
+
+use proto::app_service_server::{AppService as AppServiceTrait, AppServiceServer};
+
+#[derive(Default, Clone)]
+pub struct AppService;
+
+#[tonic::async_trait]
+impl AppServiceTrait for AppService {
+    async fn check_health(
+        &self,
+        request: Request<proto::CheckHealthRequest>,
+    ) -> Result<Response<proto::CheckHealthResponse>, Status> {
+        log::info!("Got health check request: {:?}", request);
+
+        Ok(Response::new(proto::CheckHealthResponse {
+            status: "OK".to_string(),
+        }))
+    }
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -12,13 +36,17 @@ async fn main() -> Result<()> {
     env_logger::init();
     log::info!("App server starting...");
 
-    // build the app
-    let app = Router::new().route("/api/v1/health", get(|| async { "OK" }));
+    let addr = "0.0.0.0:50051".parse()?;
+    let app_service = AppService::default();
+    let app_service = AppServiceServer::new(app_service);
 
-    // run the app
-    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+    Server::builder()
+        .accept_http1(true)
+        .layer(GrpcWebLayer::new())
+        .add_service(app_service)
+        .serve(addr)
+        .await?;
 
-    axum::serve(listener, app).await?;
     log::info!("App server stopped");
 
     Ok(())

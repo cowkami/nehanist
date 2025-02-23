@@ -1,11 +1,11 @@
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.backend
       target: deploy
     ports:
-      - "3000:3000"
+      - "50051:50051"
     volumes:
       - ./backend:/work
     env_file:

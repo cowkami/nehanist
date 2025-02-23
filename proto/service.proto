@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package app;
+
+service AppService {
+  rpc CheckHealth (CheckHealthRequest) returns (CheckHealthResponse) {}
+}
+
+message CheckHealthRequest {}
+
+message CheckHealthResponse {
+  string status = 1;
+}
