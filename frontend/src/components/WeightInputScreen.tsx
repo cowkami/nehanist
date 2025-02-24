@@ -2,16 +2,52 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { createClient } from "@connectrpc/connect";
+import { AppService } from '../generated/proto/service_pb';
+import { createConnectTransport } from '@connectrpc/connect-web';
 
+const transport = createConnectTransport({
+  baseUrl: 'http://localhost:50051',
+});
+
+const client = createClient(
+  AppService,
+  transport,
+);
 
 const WeightInputScreen: React.FC = () => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [weight, setWeight] = useState<number | undefined>(undefined);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // prevent reload
     event.preventDefault();
-    if (weight !== undefined) {
-      console.log(`save weight ${weight} at ${date}`);
+
+    // convert date to date object
+    const dateObj = new Date(date);
+    // convert date object to date protobuf
+    const datePb = {
+      year: dateObj.getFullYear(),
+      month: dateObj.getMonth(),
+      day: dateObj.getDate(),
+    };
+
+    // create request
+    const request = {
+      weightRecord: {
+        date: datePb,
+        weight: weight,
+      },
+    };
+
+    // send request
+    const response = await client.addWeight(request);
+
+    // get weight record from response
+    const weightRecord = response.weightRecord;
+
+    if (weightRecord !== undefined) {
+      console.log(`save weight ${weightRecord?.weight} at ${weightRecord?.date}`);
     } else {
       alert('weight is required');
     }
