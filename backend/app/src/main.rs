@@ -3,6 +3,7 @@ use chrono::prelude::*;
 use dotenv::dotenv;
 use tonic::{Request, Response, Status, transport::Server};
 use tonic_web::GrpcWebLayer;
+use tower_http::cors::CorsLayer;
 
 // import the generated rust code from the proto file
 pub mod proto {
@@ -106,6 +107,12 @@ async fn main() -> Result<()> {
 
     Server::builder()
         .accept_http1(true)
+        .layer(
+            CorsLayer::new()
+                .allow_origin(tower_http::cors::Any)
+                .allow_methods(tower_http::cors::Any)
+                .allow_headers(tower_http::cors::Any),
+        )
         .layer(GrpcWebLayer::new())
         .add_service(app_service)
         .serve(addr)

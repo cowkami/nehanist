@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { AppService, DateSchema, WeightRecordSchema, AddWeightRequestSchema } from '../generated/proto/service_pb';
 import { createClient } from "@connectrpc/connect";
-import { AppService } from '../generated/proto/service_pb';
 import { createConnectTransport } from '@connectrpc/connect-web';
+import { create } from "@bufbuild/protobuf";
 
 const transport = createConnectTransport({
-  baseUrl: 'http://localhost:50051',
+  baseUrl: 'http://localhost:50051',  // Viteのデフォルトポート
 });
 
 const client = createClient(
@@ -17,39 +18,50 @@ const client = createClient(
 
 const WeightInputScreen: React.FC = () => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
-  const [weight, setWeight] = useState<number | undefined>(undefined);
+  const [weight, setWeight] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // prevent reload
-    event.preventDefault();
+    try {
+      // prevent reload
+      event.preventDefault();
 
-    // convert date to date object
-    const dateObj = new Date(date);
-    // convert date object to date protobuf
-    const datePb = {
-      year: dateObj.getFullYear(),
-      month: dateObj.getMonth(),
-      day: dateObj.getDate(),
-    };
+      // validate weight
+      const weightNum = parseFloat(weight);
+      if (isNaN(weightNum)) {
+        alert('weight is required');
+        return;
+      }
 
-    // create request
-    const request = {
-      weightRecord: {
+      // convert date to date object
+      const dateObj = new Date(date);
+      const datePb = create(DateSchema, {
+        year: dateObj.getFullYear(),
+        month: dateObj.getMonth() + 1,
+        day: dateObj.getDate(),
+      });
+
+      // create weight record
+      const weightRecordPb = create(WeightRecordSchema, {
+        id: "",
         date: datePb,
-        weight: weight,
-      },
-    };
+        weight: weightNum,
+      });
 
-    // send request
-    const response = await client.addWeight(request);
+      // create request
+      const request = create(AddWeightRequestSchema, {
+        weightRecord: weightRecordPb,
+      });
 
-    // get weight record from response
-    const weightRecord = response.weightRecord;
+      // send request
+      console.log('Sending request:', request);
+      const response = await client.addWeight(request);
+      console.log('Response:', response);
 
-    if (weightRecord !== undefined) {
-      console.log(`save weight ${weightRecord?.weight} at ${weightRecord?.date}`);
-    } else {
-      alert('weight is required');
+      // 成功時の処理
+      setWeight('');
+      alert('Weight saved successfully');
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -71,10 +83,7 @@ const WeightInputScreen: React.FC = () => {
           label="kg"
           type="number"
           value={weight}
-          onChange={(event) => {
-            const value = parseFloat(event.target.value);
-            setWeight(isNaN(value) ? undefined : value);
-          }}
+          onChange={(event) => setWeight(event.target.value)}
           slotProps={{
             htmlInput: {
               inputMode: 'decimal',

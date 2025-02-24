@@ -111,6 +111,7 @@ dependencies = [
  "tonic",
  "tonic-build",
  "tonic-web",
+ "tower-http",
 ]
 
 [[package]]
