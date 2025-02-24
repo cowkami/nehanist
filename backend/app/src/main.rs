@@ -1,4 +1,5 @@
 use anyhow::Result;
+use chrono::prelude::*;
 use dotenv::dotenv;
 use tonic::{Request, Response, Status, transport::Server};
 use tonic_web::GrpcWebLayer;
@@ -25,8 +26,71 @@ impl AppServiceTrait for AppService {
             status: "OK".to_string(),
         }))
     }
+
+    async fn add_weight(
+        &self,
+        request: Request<proto::AddWeightRequest>,
+    ) -> Result<Response<proto::AddWeightResponse>, Status> {
+        log::info!("Got add weight request: {:?}", request);
+
+        let weight_record = request
+            .into_inner()
+            .weight_record
+            .ok_or(Status::invalid_argument("weight_record is required"))?
+            .try_into()
+            .expect("invalid WeightRecord");
+
+        log::info!("WeightRecord: {:?}", weight_record);
+
+        log::info!("Writing WeightRecord to the DB...");
+        // TODO: Add the weight record to the database
+        log::info!("Completed writing WeightRecord to the DB!");
+
+        Ok(Response::new(proto::AddWeightResponse {
+            weight_record,
+            status: "OK".to_string(),
+        }))
+    }
 }
 
+#[derive(Debug)]
+struct WeightRecord {
+    id: Option<String>,
+    date: NaiveDate,
+    weight: f32,
+}
+
+impl TryInto<WeightRecord> for proto::WeightRecord {
+    type Error = anyhow::Error;
+
+    fn try_into(self) -> Result<WeightRecord> {
+        let date = self
+            .date
+            .ok_or_else(|| anyhow::anyhow!("date is required"))?
+            .try_into()?;
+
+        Ok(WeightRecord {
+            id: if self.id.is_empty() {
+                None
+            } else {
+                Some(self.id)
+            },
+            date,
+            weight: self.weight,
+        })
+    }
+}
+
+impl TryInto<NaiveDate> for proto::Date {
+    type Error = anyhow::Error;
+
+    fn try_into(self) -> Result<NaiveDate> {
+        Ok(
+            NaiveDate::from_ymd_opt(self.year as i32, self.month as u32, self.day as u32)
+                .ok_or(anyhow::anyhow!("Invalid date"))?,
+        )
+    }
+}
 #[tokio::main]
 async fn main() -> Result<()> {
     // load the environment variables for local development

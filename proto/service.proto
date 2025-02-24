@@ -4,10 +4,35 @@ package app;
 
 service AppService {
   rpc CheckHealth (CheckHealthRequest) returns (CheckHealthResponse) {}
+  rpc AddWeight (AddWeightRequest) returns (AddWeightResponse) {}
 }
 
+// CheckHealth RPC
 message CheckHealthRequest {}
 
 message CheckHealthResponse {
   string status = 1;
+}
+
+// AddWeight RPC
+message AddWeightRequest {
+  WeightRecord weight_record = 1;
+}
+
+message AddWeightResponse {
+  WeightRecord weight_record = 1;
+  string status = 2;
+}
+
+// Common messages
+message WeightRecord {
+  string id = 1;
+  Date date = 2;
+  float weight = 3;
+}
+
+message Date {
+  int32 year = 1;
+  int32 month = 2;
+  int32 day = 3;
 }

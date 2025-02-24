@@ -22,7 +22,7 @@ FROM builder AS dev
 WORKDIR /work/backend
 RUN cargo install cargo-watch
 
-CMD cargo watch -x run
+CMD cargo watch -x run -d 1
 
 
 # prod/stg/dev環境のデプロイステージ

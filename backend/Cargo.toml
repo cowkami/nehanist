@@ -6,5 +6,4 @@ resolver = "3"
 version = "0.1.0"
 
 [workspace.dependencies]
-app = { path = "app" }
 anyhow = "1.0.96"
