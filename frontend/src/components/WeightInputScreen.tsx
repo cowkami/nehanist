@@ -4,10 +4,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { AppService, DateSchema, WeightRecordSchema, AddWeightRequestSchema } from '../generated/proto/service_pb';
 import { createClient } from "@connectrpc/connect";
-import { createConnectTransport } from '@connectrpc/connect-web';
+import { createGrpcWebTransport } from '@connectrpc/connect-web';
 import { create } from "@bufbuild/protobuf";
 
-const transport = createConnectTransport({
+const transport = createGrpcWebTransport({
   baseUrl: 'http://localhost:50051',  // Viteのデフォルトポート
 });
 
@@ -59,9 +59,9 @@ const WeightInputScreen: React.FC = () => {
 
       // 成功時の処理
       setWeight('');
-      alert('Weight saved successfully');
     } catch (error) {
       console.error(error);
+      alert('Failed to save weight');
     }
   }
 
