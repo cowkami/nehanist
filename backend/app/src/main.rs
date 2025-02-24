@@ -43,9 +43,9 @@ impl AppServiceTrait for AppService {
 
         log::info!("WeightRecord: {:?}", weight_record);
 
-        log::info!("Writing WeightRecord to the DB...");
+        log::info!("Writing WeightRecord...");
         // TODO: Add the weight record to the database
-        log::info!("Completed writing WeightRecord to the DB!");
+        log::info!("Completed writing WeightRecord!");
 
         Ok(Response::new(proto::AddWeightResponse {
             weight_record,
