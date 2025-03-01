@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run generate:proto",
+    "prebuild": "npm run generate:proto",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
