@@ -1,6 +1,6 @@
 import './styles.css'
-import { ThemeProvider } from '@mui/material/styles';
-import { darkTheme, lightTheme } from './theme';
+import { ThemeProvider } from '@mui/material';
+import { darkTheme } from './theme';
 import WeightInputScreen from './components/WeightInputScreen'
 import { CssBaseline } from '@mui/material';
 
