@@ -2,11 +2,11 @@
 edition = "2024"
 name = "app"
 version = "0.1.0"
-build = "build.rs"
 
 [dependencies]
-app-server = { path = "../crates/infra/app-server" }
+app-server = { workspace = true }
 anyhow = { workspace = true }
+tokio = { workspace = true }
 dotenv = "0.15.0"
 env_logger = "0.11.6"
 log = "0.4.26"

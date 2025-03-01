@@ -1,13 +1,12 @@
 use anyhow::Result;
 use chrono::prelude::*;
-use dotenv::dotenv;
 use tonic::{Request, Response, Status, transport::Server};
 use tonic_web::GrpcWebLayer;
 use tower_http::cors::CorsLayer;
 
 // import the generated rust code from the proto file
 pub mod proto {
-    tonic::include_proto!("app");
+    tonic::include_proto!("nehanist_proto");
 }
 
 use proto::app_service_server::{AppService as AppServiceTrait, AppServiceServer};
@@ -93,7 +92,7 @@ impl TryInto<NaiveDate> for proto::Date {
     }
 }
 
-struct AppServer;
+pub struct AppServer;
 
 impl AppServer {
     pub async fn run() -> Result<()> {

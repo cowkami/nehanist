@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package app;
+package nehanist_proto;
 
 service AppService {
   rpc CheckHealth (CheckHealthRequest) returns (CheckHealthResponse) {}

@@ -106,6 +106,7 @@ dependencies = [
  "dotenv",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]

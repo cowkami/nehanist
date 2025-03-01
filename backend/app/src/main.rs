@@ -1,7 +1,5 @@
 use anyhow::Result;
 use dotenv::dotenv;
-use env_logger::init;
-use log::info;
 
 use app_server::AppServer;
 
@@ -12,6 +10,7 @@ async fn main() -> Result<()> {
 
     // initialize the logger
     env_logger::init();
+    log::info!("Log level: {}", log::max_level());
     log::info!("App server starting...");
 
     AppServer::run().await?;

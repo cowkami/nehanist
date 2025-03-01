@@ -6,12 +6,12 @@ build = "build.rs"
 
 [dependencies]
 anyhow = { workspace = true }
+tokio = { workspace = true }
 chrono = "0.4.39"
 dotenv = "0.15.0"
 env_logger = "0.11.6"
 log = "0.4.26"
 prost = "0.13.5"
-tokio = { version = "1.43.0", features = ["rt-multi-thread", "net"] }
 tonic = "0.12.3"
 tonic-web = "0.12.3"
 tower-http = { version = "0.5.2", features = ["cors"] }
