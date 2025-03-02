@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
-      target: deploy
+      target: dev
     ports:
       - "50051:50051"
     volumes:
@@ -11,3 +11,18 @@ services:
       - ./proto:/work/proto
     env_file:
       - ./backend/.env
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: dev
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/work/frontend
+      - ./proto:/work/proto
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend

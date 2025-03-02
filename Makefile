@@ -1,11 +1,9 @@
-build:
+build-dev:
 	docker compose build
+	docker compose run frontend npm i
 
 up:
 	docker compose up
 
-build-dev:
-	docker compose -f compose.dev.yaml build
-
-up-dev:
-	docker compose -f compose.dev.yaml up
+build:
+	docker compose -f compose.yaml -f compose.build.yaml build

@@ -10,11 +10,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate:proto": "buf generate ../proto"
+    "generate:proto": "npx buf generate ../proto"
   },
   "dependencies": {
     "@buf/connectrpc_eliza.bufbuild_es": "^2.2.3-20230913231627-233fca715f49.1",
+    "@bufbuild/buf": "^1.50.0",
+    "@bufbuild/protoc-gen-es": "^2.2.3",
     "@bufbuild/protobuf": "^2.2.3",
+    "@bufbuild/protoplugin": "^2.2.3",
     "@connectrpc/connect": "^2.0.1",
     "@connectrpc/connect-web": "^2.0.1",
     "@emotion/react": "^11.14.0",
@@ -26,8 +29,11 @@
     "tailwindcss": "^4.0.7"
   },
   "devDependencies": {
+    "@buf/connectrpc_eliza.bufbuild_es": "^2.2.3-20230913231627-233fca715f49.1",
     "@bufbuild/buf": "^1.50.0",
     "@bufbuild/protoc-gen-es": "^2.2.3",
+    "@bufbuild/protobuf": "^2.2.3",
+    "@bufbuild/protoplugin": "^2.2.3",
     "@eslint/js": "^9.19.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
