@@ -12,11 +12,17 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
     - uses: actions/checkout@v4
     - name: Setup Rust toolchain
       uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
     - name: Build
       run: cargo build --release
     - name: Run tests
