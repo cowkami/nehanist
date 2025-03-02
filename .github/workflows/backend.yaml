@@ -23,7 +23,11 @@ jobs:
       with:
         toolchain: stable
         override: true
-    - name: Build
-      run: cargo build --release
+    - name: Install Protocol Buffers
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y protobuf-compiler
     - name: Run tests
       run: cargo test --release
+    - name: Build
+      run: cargo build --release
